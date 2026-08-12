@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Edit Book</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body class="bg-light">
+
+<div class="container mt-5">
+
+<div class="row justify-content-center">
+
+<div class="col-md-7">
+
+<div class="card shadow">
+
+<div class="card-body">
+
+<h2 class="text-center mb-4">
+
+Edit Book
+
+</h2>
+
+<form id="editForm" enctype="multipart/form-data">
+
+<input type="hidden" id="book_id" value="{{ book.id }}">
+
+<div class="mb-3">
+
+<label>Title</label>
+
+<input
+type="text"
+id="title"
+class="form-control"
+value="{{ book.title }}">
+
+</div>
+
+<div class="mb-3">
+
+<label>Author</label>
+
+<input
+type="text"
+id="author"
+class="form-control"
+value="{{ book.author }}">
+
+</div>
+
+<div class="mb-3">
+
+<label>Category</label>
+
+<input
+type="text"
+id="category"
+class="form-control"
+value="{{ book.category }}">
+
+</div>
+
+<div class="mb-3">
+
+<label>Price</label>
+
+<input
+type="number"
+id="price"
+class="form-control"
+value="{{ book.price }}">
+
+</div>
+
+<div class="mb-3">
+
+<label>Condition</label>
+
+<select
+id="condition"
+class="form-control">
+
+<option {% if book.condition=="New" %}selected{% endif %}>New</option>
+
+<option {% if book.condition=="Used" %}selected{% endif %}>Used</option>
+
+</select>
+
+</div>
+
+<div class="mb-3">
+
+<label>Description</label>
+
+<textarea
+id="description"
+class="form-control">{{ book.description }}</textarea>
+
+</div>
+<div class="mb-3">
+
+    <label class="form-label">
+        Change Book Image
+    </label>
+
+    <input
+        type="file"
+        id="image"
+        class="form-control"
+        accept="image/*">
+
+    <small class="text-muted">
+        Leave empty if you want to keep the current image.
+    </small>
+
+</div>
+<button
+type="submit"
+class="btn btn-success w-100">
+
+Update Book
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+document.getElementById("editForm").addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+    const id = document.getElementById("book_id").value;
+
+    const formData = new FormData();
+
+    formData.append(
+        "title",
+        document.getElementById("title").value
+    );
+
+    formData.append(
+        "author",
+        document.getElementById("author").value
+    );
+
+    formData.append(
+        "category",
+        document.getElementById("category").value
+    );
+
+    formData.append(
+        "price",
+        document.getElementById("price").value
+    );
+
+    formData.append(
+        "condition",
+        document.getElementById("condition").value
+    );
+
+    formData.append(
+        "description",
+        document.getElementById("description").value
+    );
+
+    const image = document.getElementById("image").files[0];
+
+    if (image) {
+
+        formData.append("image", image);
+
+    }
+
+    const response = await fetch(
+        "/update-book/" + id,
+        {
+            method: "POST",
+            body: formData
+        }
+    );
+
+    const result = await response.json();
+
+    alert(result.message);
+
+    if (result.success) {
+
+        window.location = "/my-books";
+
+    }
+
+});
+
+</script>
+
+</body>
+
+</html>

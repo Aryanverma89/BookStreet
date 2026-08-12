@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>My Cart | BookStreet</title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <!-- Google Font -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Main CSS -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        /* =========================================
+           CART PAGE
+        ========================================= */
+
+        .cart-page {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px 70px;
+        }
+
+
+        /* =========================================
+           NAVBAR
+        ========================================= */
+
+        .cart-navbar {
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 12px 0;
+        }
+
+        .cart-navbar-inner {
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+            padding: 0 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+        }
+
+        .cart-navbar-brand {
+            color: #111827;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 800;
+
+            white-space: nowrap;
+        }
+
+        .cart-navbar-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+
+        /* =========================================
+           HEADER
+        ========================================= */
+
+        .cart-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .cart-header h1 {
+            margin: 0;
+            font-size: clamp(28px, 4vw, 38px);
+            font-weight: 800;
+            color: #111827;
+        }
+
+        .cart-header p {
+            margin-top: 8px;
+            color: #6b7280;
+            font-size: 15px;
+        }
+
+
+        /* =========================================
+           MAIN CART LAYOUT
+        ========================================= */
+
+        .cart-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+            gap: 25px;
+            align-items: start;
+        }
+
+
+        /* =========================================
+           CART ITEM
+        ========================================= */
+
+        .cart-item {
+            width: 100%;
+            background: #ffffff;
+
+            border: 1px solid #e5e7eb;
+            border-radius: 15px;
+
+            padding: 18px;
+
+            margin-bottom: 18px;
+
+            box-shadow:
+                0 5px 18px rgba(0, 0, 0, 0.05);
+
+            overflow: hidden;
+        }
+
+
+        /* =========================================
+           ITEM CONTENT
+        ========================================= */
+
+        .cart-item-content {
+            display: grid;
+
+            grid-template-columns: 180px minmax(0, 1fr) auto;
+
+            gap: 20px;
+
+            align-items: center;
+        }
+
+
+        /* =========================================
+           IMAGE
+        ========================================= */
+
+        .cart-image-wrapper {
+            width: 180px;
+            height: 220px;
+
+            border-radius: 10px;
+
+            background: #f8fafc;
+
+            overflow: hidden;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        .cart-book-image {
+            width: 100%;
+            height: 100%;
+
+            object-fit: contain;
+
+            display: block;
+        }
+
+
+        .cart-book-placeholder {
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 50px;
+
+            background: #f3f4f6;
+        }
+
+
+        /* =========================================
+           BOOK DETAILS
+        ========================================= */
+
+        .cart-book-info {
+            min-width: 0;
+        }
+
+
+        .cart-book-title {
+            font-size: 21px;
+            line-height: 1.35;
+
+            font-weight: 700;
+
+            color: #111827;
+
+            margin: 0 0 14px;
+
+            overflow-wrap: anywhere;
+        }
+
+
+        .book-detail {
+            color: #6b7280;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+
+            margin: 5px 0;
+        }
+
+
+        .book-detail strong {
+            color: #374151;
+        }
+
+
+        .cart-price {
+            display: block;
+
+            margin-top: 14px;
+
+            color: #059669;
+
+            font-size: 23px;
+
+            font-weight: 800;
+        }
+
+
+        /* =========================================
+           REMOVE BUTTON
+        ========================================= */
+
+        .cart-remove-area {
+            align-self: center;
+
+            white-space: nowrap;
+        }
+
+        .remove-cart-btn {
+            border-radius: 8px;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            padding: 8px 12px;
+        }
+
+
+        /* =========================================
+           SUMMARY
+        ========================================= */
+
+        .cart-summary {
+            width: 100%;
+
+            background: #ffffff;
+
+            border: 1px solid #e5e7eb;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 5px 18px rgba(0, 0, 0, 0.05);
+
+            position: sticky;
+
+            top: 20px;
+        }
+
+
+        .cart-summary-body {
+            padding: 25px;
+        }
+
+
+        .cart-summary h3 {
+            font-size: 22px;
+            font-weight: 800;
+
+            margin-bottom: 22px;
+
+            color: #111827;
+        }
+
+
+        .summary-row {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 15px;
+
+            margin-bottom: 15px;
+        }
+
+
+        .summary-label {
+            color: #6b7280;
+
+            font-size: 14px;
+        }
+
+
+        .summary-value {
+            font-weight: 700;
+            color: #111827;
+        }
+
+
+        .cart-total {
+            color: #059669;
+
+            font-size: 23px;
+
+            font-weight: 800;
+
+            white-space: nowrap;
+        }
+
+
+        .cart-summary button {
+            min-height: 42px;
+
+            font-weight: 600;
+
+            border-radius: 8px;
+        }
+
+
+        /* =========================================
+           EMPTY CART
+        ========================================= */
+
+        .empty-cart {
+            width: 100%;
+
+            background: #ffffff;
+
+            border: 1px solid #e5e7eb;
+
+            border-radius: 15px;
+
+            padding: 70px 20px;
+
+            text-align: center;
+
+            box-shadow:
+                0 5px 18px rgba(0, 0, 0, 0.04);
+        }
+
+
+        .empty-cart-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+
+        .empty-cart h2 {
+            font-size: 27px;
+
+            font-weight: 800;
+
+            color: #111827;
+        }
+
+
+        .empty-cart p {
+            color: #6b7280;
+
+            margin-bottom: 25px;
+        }
+
+
+        /* =========================================
+           LARGE TABLET
+        ========================================= */
+
+        @media (max-width: 1000px) {
+
+            .cart-layout {
+                grid-template-columns: minmax(0, 1fr) 300px;
+                gap: 18px;
+            }
+
+            .cart-item-content {
+                grid-template-columns: 145px minmax(0, 1fr);
+            }
+
+            .cart-image-wrapper {
+                width: 145px;
+                height: 190px;
+            }
+
+            .cart-remove-area {
+                grid-column: 2;
+                justify-self: start;
+                margin-top: 5px;
+            }
+
+        }
+
+
+        /* =========================================
+           TABLET
+        ========================================= */
+
+        @media (max-width: 800px) {
+
+            .cart-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .cart-summary {
+                position: static;
+                order: 2;
+            }
+
+            .cart-items-section {
+                order: 1;
+            }
+
+        }
+
+
+        /* =========================================
+           MOBILE
+        ========================================= */
+
+        @media (max-width: 600px) {
+
+            .cart-page {
+                padding: 30px 14px 50px;
+            }
+
+
+            /* NAVBAR */
+
+            .cart-navbar-inner {
+                flex-direction: column;
+
+                align-items: center;
+
+                gap: 12px;
+
+                padding: 12px 14px;
+            }
+
+
+            .cart-navbar-links {
+                width: 100%;
+
+                justify-content: center;
+            }
+
+
+            .cart-navbar-links .btn {
+                font-size: 12px;
+
+                padding: 7px 10px;
+            }
+
+
+            /* HEADER */
+
+            .cart-header {
+                margin-bottom: 25px;
+            }
+
+
+            .cart-header h1 {
+                font-size: 28px;
+            }
+
+
+            .cart-header p {
+                font-size: 14px;
+            }
+
+
+            /* CART ITEM */
+
+            .cart-item {
+                padding: 14px;
+
+                border-radius: 12px;
+            }
+
+
+            .cart-item-content {
+                display: flex;
+
+                flex-direction: column;
+
+                align-items: stretch;
+
+                gap: 15px;
+            }
+
+
+            /* IMAGE */
+
+            .cart-image-wrapper {
+                width: 100%;
+
+                height: 260px;
+
+                margin: 0 auto;
+            }
+
+
+            /* DETAILS */
+
+            .cart-book-info {
+                width: 100%;
+            }
+
+
+            .cart-book-title {
+                font-size: 19px;
+
+                margin-bottom: 12px;
+            }
+
+
+            .book-detail {
+                font-size: 13px;
+            }
+
+
+            .cart-price {
+                font-size: 21px;
+
+                margin-top: 12px;
+            }
+
+
+            /* REMOVE */
+
+            .cart-remove-area {
+                width: 100%;
+
+                margin: 0;
+
+                white-space: normal;
+            }
+
+
+            .remove-cart-btn {
+                width: 100%;
+
+                padding: 10px;
+            }
+
+
+            /* SUMMARY */
+
+            .cart-summary-body {
+                padding: 20px;
+            }
+
+
+            .cart-summary h3 {
+                font-size: 20px;
+            }
+
+
+            .cart-total {
+                font-size: 21px;
+            }
+
+
+            /* EMPTY */
+
+            .empty-cart {
+                padding: 55px 18px;
+            }
+
+
+            .empty-cart-icon {
+                font-size: 50px;
+            }
+
+
+            .empty-cart h2 {
+                font-size: 23px;
+            }
+
+        }
+
+
+        /* =========================================
+           VERY SMALL MOBILE
+        ========================================= */
+
+        @media (max-width: 380px) {
+
+            .cart-page {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+
+            .cart-navbar-links {
+                gap: 5px;
+            }
+
+
+            .cart-navbar-links .btn {
+                font-size: 11px;
+
+                padding: 6px 8px;
+            }
+
+
+            .cart-image-wrapper {
+                height: 230px;
+            }
+
+
+            .cart-book-title {
+                font-size: 18px;
+            }
+
+
+            .cart-summary-body {
+                padding: 16px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<nav class="cart-navbar">
+
+    <div class="cart-navbar-inner">
+
+
+        <a
+            href="/"
+            class="cart-navbar-brand">
+
+            📚 BookStreet
+
+        </a>
+
+
+        <div class="cart-navbar-links">
+
+            <a
+                href="/"
+                class="btn btn-light btn-sm">
+
+                Home
+
+            </a>
+
+
+            <a
+                href="/dashboard"
+                class="btn btn-light btn-sm">
+
+                Dashboard
+
+            </a>
+
+
+            <a
+                href="/browse-books"
+                class="btn btn-primary btn-sm">
+
+                Browse Books
+
+            </a>
+
+
+            <a
+                href="/logout"
+                class="btn btn-danger btn-sm">
+
+                Logout
+
+            </a>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =====================================================
+     CART
+===================================================== -->
+
+<main class="cart-page">
+
+
+    <!-- HEADER -->
+
+    <div class="cart-header">
+
+        <h1>
+            🛒 My Cart
+        </h1>
+
+        <p>
+            Review the books you want to buy.
+        </p>
+
+    </div>
+
+
+
+    {% if cart_items %}
+
+
+    <!-- MAIN LAYOUT -->
+
+    <div class="cart-layout">
+
+
+        <!-- =============================================
+             CART ITEMS
+        ============================================== -->
+
+        <section class="cart-items-section">
+
+
+            {% for item in cart_items %}
+
+            {% if item.book %}
+
+
+            <div class="cart-item">
+
+
+                <div class="cart-item-content">
+
+
+                    <!-- IMAGE -->
+
+                    <div class="cart-image-wrapper">
+
+                        {% if item.book.image %}
+
+                        <img
+                            src="{{ url_for(
+                                'static',
+                                filename='uploads/' + item.book.image
+                            ) }}"
+                            class="cart-book-image"
+                            alt="{{ item.book.title }}">
+
+                        {% else %}
+
+                        <div class="cart-book-placeholder">
+                            📚
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+
+                    <!-- DETAILS -->
+
+                    <div class="cart-book-info">
+
+
+                        <h3 class="cart-book-title">
+
+                            {{ item.book.title }}
+
+                        </h3>
+
+
+                        <p class="book-detail">
+
+                            <strong>Author:</strong>
+                            {{ item.book.author }}
+
+                        </p>
+
+
+                        <p class="book-detail">
+
+                            <strong>Category:</strong>
+                            {{ item.book.category }}
+
+                        </p>
+
+
+                        <p class="book-detail">
+
+                            <strong>Condition:</strong>
+                            {{ item.book.condition }}
+
+                        </p>
+
+
+                        <div class="cart-price">
+
+                            ₹{{ "%.2f"|format(item.book.price) }}
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- REMOVE -->
+
+                    <div class="cart-remove-area">
+
+                        <button
+                            type="button"
+                            class="btn btn-outline-danger remove-cart-btn"
+                            data-book-id="{{ item.book.id }}">
+
+                            🗑 Remove
+
+                        </button>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            {% endif %}
+
+            {% endfor %}
+
+
+        </section>
+
+
+
+        <!-- =============================================
+             SUMMARY
+        ============================================== -->
+
+        <aside class="cart-summary">
+
+
+            <div class="cart-summary-body">
+
+
+                <h3>
+                    Cart Summary
+                </h3>
+
+
+                <div class="summary-row">
+
+                    <span class="summary-label">
+                        Items
+                    </span>
+
+                    <span class="summary-value">
+                        {{ cart_items|length }}
+                    </span>
+
+                </div>
+
+
+                <hr>
+
+
+                <div class="summary-row">
+
+                    <strong>
+                        Total
+                    </strong>
+
+                    <span class="cart-total">
+                        ₹{{ "%.2f"|format(total) }}
+                    </span>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    id="clearCartBtn"
+                    class="btn btn-outline-danger w-100 mt-3">
+
+                    🗑 Clear Cart
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="btn btn-success w-100 mt-2"
+                    disabled>
+
+                    Checkout Coming Soon
+
+                </button>
+
+
+            </div>
+
+        </aside>
+
+
+    </div>
+
+
+    {% else %}
+
+
+    <!-- =============================================
+         EMPTY CART
+    ============================================== -->
+
+    <div class="empty-cart">
+
+        <div class="empty-cart-icon">
+            🛒
+        </div>
+
+
+        <h2>
+            Your Cart is Empty
+        </h2>
+
+
+        <p>
+            Browse our books and add something you like.
+        </p>
+
+
+        <a
+            href="/browse-books"
+            class="btn btn-primary">
+
+            📖 Browse Books
+
+        </a>
+
+    </div>
+
+
+    {% endif %}
+
+
+</main>
+
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script>
+
+
+/* =========================================
+   REMOVE BOOK
+========================================= */
+
+document
+    .querySelectorAll(".remove-cart-btn")
+    .forEach(function(button) {
+
+        button.addEventListener(
+            "click",
+            async function() {
+
+                const bookId =
+                    this.dataset.bookId;
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            "/remove-from-cart/" + bookId,
+                            {
+                                method: "POST"
+                            }
+                        );
+
+
+                    const result =
+                        await response.json();
+
+
+                    alert(result.message);
+
+
+                    if (result.success) {
+
+                        window.location.reload();
+
+                    }
+
+                }
+                catch (error) {
+
+                    console.error(error);
+
+                    alert(
+                        "Something went wrong. Please try again."
+                    );
+
+                }
+
+            }
+        );
+
+    });
+
+
+
+/* =========================================
+   CLEAR CART
+========================================= */
+
+const clearCartBtn =
+    document.getElementById(
+        "clearCartBtn"
+    );
+
+
+if (clearCartBtn) {
+
+    clearCartBtn.addEventListener(
+        "click",
+        async function() {
+
+            const confirmed =
+                confirm(
+                    "Are you sure you want to clear your cart?"
+                );
+
+
+            if (!confirmed) {
+                return;
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/clear-cart",
+                        {
+                            method: "POST"
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                alert(result.message);
+
+
+                if (result.success) {
+
+                    window.location.reload();
+
+                }
+
+            }
+            catch (error) {
+
+                console.error(error);
+
+                alert(
+                    "Something went wrong. Please try again."
+                );
+
+            }
+
+        }
+    );
+
+}
+
+</script>
+
+
+</body>
+
+</html>
